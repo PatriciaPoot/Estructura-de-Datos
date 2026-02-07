@@ -14,7 +14,6 @@ for i in range(alumnos):
 print("\nBúsqueda de calificación")
 alumno_buscar = int(input("Ingresa el número de alumno (1-500): "))
 materia_buscar = int(input("Ingresa el número de materia (1-6): "))
-
 fila = alumno_buscar - 1
 columna = materia_buscar - 1
 
@@ -24,3 +23,4 @@ if 0 <= fila < alumnos and 0 <= columna < materias:
     print(f"Calificación: {calificacion}")
 else:
     print("Posición fuera de rango")
+
