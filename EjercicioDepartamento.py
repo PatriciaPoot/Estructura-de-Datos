@@ -25,7 +25,6 @@ def mostrar_tabla():
     for i in range(12):
         print(f"{meses[i]:<10}\t{ventas[i][0]}\t{ventas[i][1]}\t\t{ventas[i][2]}")
 
-
 def modificar_venta():
     mes = input("¿Qué mes quieres modificar?: ").capitalize()
     dep = input("¿Qué departamento? (Ropa / Deportes / Juguetería): ").capitalize()
@@ -41,7 +40,6 @@ def modificar_venta():
     else:
         print("Mes o departamento inválido.")
 
-
 def buscar_mes_departamento():
     mes = input("¿Qué mes quieres buscar?: ").capitalize()
     dep = input("¿Qué departamento? (Ropa / Deportes / Juguetería): ").capitalize()
@@ -53,7 +51,6 @@ def buscar_mes_departamento():
     else:
         print("Mes o departamento inválido.")
 
-
 def eliminar_venta():
     mes = input("¿Qué mes quieres eliminar?: ").capitalize()
     dep = input("¿Qué departamento? (Ropa / Deportes / Juguetería): ").capitalize()
@@ -61,13 +58,13 @@ def eliminar_venta():
     if mes in meses and dep in departamentos:
         fila = meses.index(mes)
         col = departamentos.index(dep)
-
+        
         print(f"Venta actual de {mes} en {dep}: {ventas[fila][col]}")
         confirmar = input("¿Seguro que quieres eliminar este monto? (s/n): ").lower()
 
         if confirmar == "s":
             ventas[fila][col] = 0
-            print("✔ Monto eliminado (puesto en 0).")
+            print("Monto eliminado (puesto en 0).")
         else:
             print("Operación cancelada.")
     else:
@@ -99,5 +96,3 @@ def menu():
             print("Opción inválida.")
 
 menu()
-
-
