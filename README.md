@@ -6,3 +6,18 @@
      - "buscar_mes_departamento()" sirve para consultar una venta en específico, en donde al usuario se le pide el mes y el departamento, y luego el programa le muestra el valor guardado.
      - "eliminar_venta()" pone en 0 una venta después de que el usuario confirma su la eliminacion.
      - "menu()" muestra las opciones y ejecuta cada función según lo que el usuario elija.
+
+-Programa Recursivo -> Fibonacci: Este programa implementa dos enfoques para calcular la secuencia de Fibonacci:
+     - Ventajas del Enfoque Iterativo:
+				-  Más eficiente: Utiliza un solo bucle, complejidad O(n)
+				-  Menor uso de memoria: No crea nuevas llamadas en la pila de ejecución
+				-  Más rápido: Especialmente para valores grandes de n
+				-  Evita el desbordamiento de pila: No hay límite de recursión
+				-  Predecible: El tiempo de ejecución crece linealmente
+		 - Ventajas del Enfoque Recursivo:
+				-  Código más limpio y elegante: Refleja directamente la definición matemática
+			  -  Más fácil de entender: Sigue la lógica natural de la secuencia
+			  -  Ideal para problemas divisibles: Útil cuando un problema puede dividirse en subproblemas similares
+				-  Menos líneas de código: Solución más concisa
+				-  Demuestra el concepto de recursividad: Excelente para aprendizaje y comprensión
+		
