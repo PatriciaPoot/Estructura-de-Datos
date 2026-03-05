@@ -20,8 +20,8 @@ class PilaGrafica:
         frame = tk.Frame(root, bg="black")
         frame.pack(pady=10)
 
-        tk.Button(frame, text="Push", command=self.push, bg="#CDB4DB", width=12).grid(row=0,column=0,padx=6)
-        tk.Button(frame, text="Pop", command=self.pop, bg="#FFC8DD", width=12).grid(row=0,column=1,padx=6)
+        tk.Button(frame, text="Agregar", command=self.push, bg="#CDB4DB", width=12).grid(row=0,column=0,padx=6)
+        tk.Button(frame, text="Eliminar", command=self.pop, bg="#FFC8DD", width=12).grid(row=0,column=1,padx=6)
         tk.Button(frame, text="Eliminar disco", command=self.eliminar_disco, bg="#BDE0FE", width=14).grid(row=0,column=2,padx=6)
         tk.Button(frame, text="Vaciar pila", command=self.vaciar_pila, bg="#A0E7E5", width=12).grid(row=0,column=3,padx=6)
 
@@ -149,4 +149,5 @@ class PilaGrafica:
 
 root = tk.Tk()
 app = PilaGrafica(root)
+
 root.mainloop()
