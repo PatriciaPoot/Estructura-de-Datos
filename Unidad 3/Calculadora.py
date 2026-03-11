@@ -50,6 +50,7 @@ class CalculadoraNotacion:
         self.entrada = tk.Entry(frame_entrada, width=30, **self.estilo_entry)
         self.entrada.pack(side=tk.LEFT, padx=5)
         self.entrada.bind('<Return>', lambda e: self.evaluar())
+        self.entrada.bind('<Button-1>', self.limpiar_para_nueva_operacion)  # Nuevo evento
         
         # Frame para tipo de notación
         frame_tipo = tk.Frame(self.root, bg='#2c3e50')
@@ -61,6 +62,7 @@ class CalculadoraNotacion:
                                   state="readonly", font=('Arial', 12), width=15)
         self.tipo.set("Prefija")
         self.tipo.pack(side=tk.LEFT, padx=5)
+        self.tipo.bind('<<ComboboxSelected>>', self.limpiar_campos)  # Nuevo evento
         
         # Frame para resultado
         frame_resultado = tk.Frame(self.root, bg='#2c3e50')
@@ -104,7 +106,7 @@ class CalculadoraNotacion:
         ejemplos_prefija.pack(pady=5, padx=10, anchor='w')
         
         # Ejemplos prefija (3)
-        tk.Label(ejemplos_prefija, text="+ 3 4         = 7", 
+        tk.Label(ejemplos_prefija, text="+ 10 5        = 15", 
                  font=('Courier', 11), bg='#34495e', fg='white', anchor='w').pack(fill='x', pady=2)
         tk.Label(ejemplos_prefija, text="* + 5 3 - 2 1 = 8", 
                  font=('Courier', 11), bg='#34495e', fg='white', anchor='w').pack(fill='x', pady=2)
@@ -122,12 +124,23 @@ class CalculadoraNotacion:
         ejemplos_posfija.pack(pady=5, padx=10, anchor='w')
         
         # Ejemplos posfija (3)
-        tk.Label(ejemplos_posfija, text="3 4 +         = 7", 
+        tk.Label(ejemplos_posfija, text="10 5 +        = 15", 
                  font=('Courier', 11), bg='#34495e', fg='white', anchor='w').pack(fill='x', pady=2)
         tk.Label(ejemplos_posfija, text="5 3 + 2 1 - * = 8", 
                  font=('Courier', 11), bg='#34495e', fg='white', anchor='w').pack(fill='x', pady=2)
         tk.Label(ejemplos_posfija, text="2 3 * 4 5 * + = 26", 
                  font=('Courier', 11), bg='#34495e', fg='white', anchor='w').pack(fill='x', pady=2)
+    
+    def limpiar_campos(self, event=None):
+        """Limpia el campo de entrada y el resultado al cambiar el tipo de notación"""
+        self.entrada.delete(0, tk.END)
+        self.resultado_var.set("---")
+    
+    def limpiar_para_nueva_operacion(self, event=None):
+        """Limpia el campo de entrada y resultado cuando se hace clic para escribir una nueva operación"""
+        if self.resultado_var.get() != "---" or self.entrada.get():
+            self.entrada.delete(0, tk.END)
+            self.resultado_var.set("---")
     
     def es_numero(self, cadena):
         try:
