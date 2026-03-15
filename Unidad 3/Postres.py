@@ -1,23 +1,49 @@
 POSTRES = {}
 
 
-# -----------------------------
+# ==================================
 # SUBPROGRAMA: eliminar repetidos
-# -----------------------------
+# ==================================
+
 def eliminar_repetidos():
+
     for postre in POSTRES:
+
         ingredientes_unicos = []
 
         for ing in POSTRES[postre]:
+
             if ing not in ingredientes_unicos:
                 ingredientes_unicos.append(ing)
 
         POSTRES[postre] = ingredientes_unicos
 
 
-# -----------------------------
-# Mostrar ingredientes
-# -----------------------------
+# ==================================
+# MOSTRAR LISTA DE POSTRES
+# ==================================
+
+def mostrar_postres():
+
+    print("\n" + "-"*40)
+
+    if not POSTRES:
+        print("No hay postres registrados.")
+        print("-"*40)
+        return
+
+    print("Lista de postres:\n")
+
+    for p in POSTRES:
+        print("•", p)
+
+    print("-"*40)
+
+
+# ==================================
+# MOSTRAR INGREDIENTES
+# ==================================
+
 def mostrar_ingredientes():
 
     print("\n" + "-"*40)
@@ -43,9 +69,10 @@ def mostrar_ingredientes():
     print("-"*40)
 
 
-# -----------------------------
-# Agregar ingrediente
-# -----------------------------
+# ==================================
+# AGREGAR INGREDIENTE
+# ==================================
+
 def agregar_ingrediente():
 
     print("\n" + "-"*40)
@@ -76,9 +103,10 @@ def agregar_ingrediente():
     print("-"*40)
 
 
-# -----------------------------
-# Eliminar ingrediente
-# -----------------------------
+# ==================================
+# ELIMINAR INGREDIENTE
+# ==================================
+
 def eliminar_ingrediente():
 
     print("\n" + "-"*40)
@@ -108,9 +136,10 @@ def eliminar_ingrediente():
     print("-"*40)
 
 
-# -----------------------------
-# Alta de postre
-# -----------------------------
+# ==================================
+# ALTA DE POSTRE
+# ==================================
+
 def alta_postre():
 
     print("\n" + "-"*40)
@@ -146,14 +175,19 @@ def alta_postre():
 
     eliminar_repetidos()
 
-    print("\nPostre agregado correctamente.")
+    # ordenar postres alfabéticamente
+    POSTRES_ordenado = dict(sorted(POSTRES.items()))
+    POSTRES.clear()
+    POSTRES.update(POSTRES_ordenado)
 
+    print("\nPostre agregado correctamente.")
     print("-"*40)
 
 
-# -----------------------------
-# Baja de postre
-# -----------------------------
+# ==================================
+# BAJA DE POSTRE
+# ==================================
+
 def baja_postre():
 
     print("\n" + "-"*40)
@@ -176,35 +210,38 @@ def baja_postre():
     print("-"*40)
 
 
-# -----------------------------
+# ==================================
 # MENU
-# -----------------------------
+# ==================================
+
 def mostrar_menu():
 
     print("\n")
     print("="*40)
-    print("         SISTEMA DE POSTRES")
+    print("        SISTEMA DE POSTRES")
     print("="*40)
     print(" 1. Alta de postre")
     print(" 2. Agregar ingrediente")
     print(" 3. Eliminar ingrediente")
     print(" 4. Mostrar ingredientes")
-    print(" 5. Baja de postre")
-    print(" 6. Salir")
+    print(" 5. Mostrar lista de postres")
+    print(" 6. Baja de postre")
+    print(" 7. Salir")
     print("="*40)
 
 
-# -----------------------------
+# ==================================
 # PROGRAMA PRINCIPAL
-# -----------------------------
+# ==================================
+
 while True:
 
     mostrar_menu()
 
     op = input("Seleccione una opción: ")
 
-    if op == "4":
-        mostrar_ingredientes()
+    if op == "1":
+        alta_postre()
 
     elif op == "2":
         agregar_ingrediente()
@@ -212,13 +249,16 @@ while True:
     elif op == "3":
         eliminar_ingrediente()
 
-    elif op == "1":
-        alta_postre()
+    elif op == "4":
+        mostrar_ingredientes()
 
     elif op == "5":
-        baja_postre()
+        mostrar_postres()
 
     elif op == "6":
+        baja_postre()
+
+    elif op == "7":
         print("\nCerrando el sistema de postres...")
         print("Programa finalizado.")
         break
