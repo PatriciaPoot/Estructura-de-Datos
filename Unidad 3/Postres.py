@@ -2,24 +2,6 @@ POSTRES = {}
 
 
 # ==================================
-# SUBPROGRAMA: eliminar repetidos
-# ==================================
-
-def eliminar_repetidos():
-
-    for postre in POSTRES:
-
-        ingredientes_unicos = []
-
-        for ing in POSTRES[postre]:
-
-            if ing not in ingredientes_unicos:
-                ingredientes_unicos.append(ing)
-
-        POSTRES[postre] = ingredientes_unicos
-
-
-# ==================================
 # MOSTRAR LISTA DE POSTRES
 # ==================================
 
@@ -91,11 +73,18 @@ def agregar_ingrediente():
         if ing == "":
             return
 
-        POSTRES[nombre].append(ing)
+        if ing in POSTRES[nombre]:
 
-        eliminar_repetidos()
+            print("\nEl ingrediente ya se encuentra registrado para este postre.")
 
-        print("\nIngrediente agregado correctamente.")
+        else:
+
+            POSTRES[nombre].append(ing)
+
+            # ordenar ingredientes
+            POSTRES[nombre].sort()
+
+            print("\nIngrediente agregado correctamente.")
 
     else:
         print("El postre no existe.")
@@ -169,11 +158,13 @@ def alta_postre():
         if ing == "":
             continue
 
-        ingredientes.append(ing)
+        if ing not in ingredientes:
+            ingredientes.append(ing)
+
+    # ordenar ingredientes
+    ingredientes.sort()
 
     POSTRES[nombre] = ingredientes
-
-    eliminar_repetidos()
 
     # ordenar postres alfabéticamente
     POSTRES_ordenado = dict(sorted(POSTRES.items()))
