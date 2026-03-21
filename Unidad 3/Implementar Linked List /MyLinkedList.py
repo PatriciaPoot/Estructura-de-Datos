@@ -1,16 +1,14 @@
 class Node:
-    """Clase que representa un elemento individual en la lista."""
+
     def __init__(self, data):
         self.data = data
         self.next = None
 
 class LinkedList:
-    """Clase principal para la gestión de la lista enlazada."""
     def __init__(self):
         self.head = None
 
     def insert_at_end(self, data):
-        """Inserta un nuevo elemento al final de la lista."""
         new_node = Node(data)
         if not self.head:
             self.head = new_node
@@ -22,13 +20,11 @@ class LinkedList:
         current.next = new_node
 
     def insert_at_start(self, data):
-        """Inserta un nuevo elemento al principio de la lista."""
         new_node = Node(data)
         new_node.next = self.head
         self.head = new_node
 
     def delete_value(self, value):
-        """Elimina la primera ocurrencia de un valor específico."""
         if not self.head:
             return
 
@@ -44,7 +40,6 @@ class LinkedList:
             current = current.next
 
     def display(self):
-        """Muestra los elementos de la lista en un formato visual."""
         elements = []
         current = self.head
         while current:
