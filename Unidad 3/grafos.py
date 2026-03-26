@@ -8,7 +8,6 @@ class Grafo:
         self.vertices = {}
         self.aristas = []
 
-    # -------- GENERALES --------
     def numVertices(self): return len(self.vertices)
     def numAristas(self): return len(self.aristas)
     def vertices_lista(self): return list(self.vertices.keys())
@@ -33,7 +32,6 @@ class Grafo:
     def esAdyacente(self, v, w):
         return (v, w) in self.aristas or (not self.dirigido and (w, v) in self.aristas)
 
-    # -------- DIRIGIDAS --------
     def gradoEntrada(self, v):
         return sum(1 for o, d in self.aristas if d == v)
 
@@ -60,7 +58,6 @@ class Grafo:
             self.aristas.remove(e)
             self.aristas.append((e[1], e[0]))
 
-    # -------- ACTUALIZACIÓN --------
     def insertarVertice(self, v, x, y):
         self.vertices[v] = (x, y)
 
@@ -95,7 +92,6 @@ class App:
         self.sel = None
         self.menu()
 
-    # -------- MENÚ --------
     def menu(self):
         m = tk.Menu(self.root)
 
@@ -200,38 +196,48 @@ class App:
         self.grafo.eliminarArista(o,d)
         self.draw()
 
-    # -------- DIBUJO (FLECHA REAL) --------
     def draw(self):
         self.canvas.delete("all")
+        radio = 15
 
         for o,d in self.grafo.aristas:
             x1,y1=self.grafo.vertices[o]
             x2,y2=self.grafo.vertices[d]
 
-            # Línea
-            self.canvas.create_line(x1,y1,x2,y2,width=2)
+            dx = x2 - x1
+            dy = y2 - y1
+            dist = (dx**2 + dy**2)**0.5
 
-            # Flecha manual
+            if dist == 0:
+                continue
+
+            x_inicio = x1 + (dx/dist)*radio
+            y_inicio = y1 + (dy/dist)*radio
+
+            x_fin = x2 - (dx/dist)*radio
+            y_fin = y2 - (dy/dist)*radio
+
+            self.canvas.create_line(x_inicio, y_inicio, x_fin, y_fin, width=2)
+
             if self.grafo.dirigido:
-                angle = math.atan2(y2-y1, x2-x1)
+                angle = math.atan2(y_fin - y_inicio, x_fin - x_inicio)
 
-                length = 15
+                length = 12
                 offset = 0.5
 
-                x3 = x2 - length * math.cos(angle - offset)
-                y3 = y2 - length * math.sin(angle - offset)
+                x3 = x_fin - length * math.cos(angle - offset)
+                y3 = y_fin - length * math.sin(angle - offset)
 
-                x4 = x2 - length * math.cos(angle + offset)
-                y4 = y2 - length * math.sin(angle + offset)
+                x4 = x_fin - length * math.cos(angle + offset)
+                y4 = y_fin - length * math.sin(angle + offset)
 
-                self.canvas.create_polygon(x2,y2,x3,y3,x4,y4, fill="black")
+                self.canvas.create_polygon(x_fin,y_fin,x3,y3,x4,y4, fill="black")
 
         for v,(x,y) in self.grafo.vertices.items():
-            self.canvas.create_oval(x-15,y-15,x+15,y+15,fill="lightblue")
+            self.canvas.create_oval(x-radio,y-radio,x+radio,y+radio,fill="lightblue")
             self.canvas.create_text(x,y,text=v)
 
 
-# -------- EJECUTAR --------
 root = tk.Tk()
 App(root)
 root.mainloop()
