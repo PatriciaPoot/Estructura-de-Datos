@@ -1,0 +1,129 @@
+import tkinter as tk
+from tkinter import ttk, scrolledtext, filedialog, messagebox
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import time
+import threading
+import os
+
+class MezcladorArchivosExternos:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Mezclador de Archivos - Ordenamiento Externo")
+        self.root.geometry("1000x700")
+        self.root.configure(bg="#1e1e1e")
+        
+        self.archivos_seleccionados = []
+        self.datos_totales = []
+        self.running = False
+        self.setup_ui()
+
+    def setup_ui(self):
+        # Panel superior: Controles
+        control_frame = tk.Frame(self.root, bg="#2d2d2d", pady=15)
+        control_frame.pack(side=tk.TOP, fill=tk.X)
+
+        tk.Label(control_frame, text="SISTEMA DE MEZCLA EXTERNA", 
+                 bg="#2d2d2d", fg="#ffb3ba", font=("Arial", 14, "bold")).pack()
+
+        btn_container = tk.Frame(control_frame, bg="#2d2d2d")
+        btn_container.pack(pady=10)
+
+        # Botones de acción
+        tk.Button(btn_container, text="📂 Seleccionar Archivos", bg="#bae1ff", 
+                  command=self.cargar_archivos, width=20, font=("Arial", 10, "bold")).pack(side=tk.LEFT, padx=5)
+        
+        tk.Button(btn_container, text="⚡ Ejecutar Mezcla", bg="#baffc9", 
+                  command=self.iniciar_proceso, width=20, font=("Arial", 10, "bold")).pack(side=tk.LEFT, padx=5)
+
+        # Cuerpo principal
+        main_content = tk.Frame(self.root, bg="#1e1e1e")
+        main_content.pack(expand=True, fill="both", padx=10, pady=10)
+
+        # Visualización de gráfico
+        self.fig, self.ax = plt.subplots(figsize=(5, 4), facecolor="#1e1e1e")
+        self.ax.set_facecolor("#1e1e1e")
+        self.canvas = FigureCanvasTkAgg(self.fig, master=main_content)
+        self.canvas.get_tk_widget().pack(side=tk.LEFT, expand=True, fill="both")
+
+        # Log de eventos
+        hist_frame = tk.Frame(main_content, bg="#252526", width=300)
+        hist_frame.pack(side=tk.RIGHT, fill=tk.Y, padx=5)
+
+        tk.Label(hist_frame, text="PROCESO DE ARCHIVOS", bg="#252526", fg="white", font=("Arial", 9, "bold")).pack(pady=5)
+        self.log_txt = scrolledtext.ScrolledText(hist_frame, bg="#1e1e1e", fg="#d4d4d4", 
+                                                width=40, font=("Consolas", 9), borderwidth=0)
+        self.log_txt.pack(expand=True, fill="both", padx=5, pady=5)
+
+    def log(self, mensaje):
+        self.log_txt.insert(tk.END, f"[{time.strftime('%H:%M:%S')}] {mensaje}\n")
+        self.log_txt.see(tk.END)
+
+    def cargar_archivos(self):
+        files = filedialog.askopenfilenames(title="Selecciona archivos .txt", filetypes=[("Archivos de texto", "*.txt")])
+        if files:
+            self.archivos_seleccionados = list(files)
+            self.log(f"Cargados {len(files)} archivos.")
+            for f in files:
+                self.log(f"-> {os.path.basename(f)}")
+
+    def actualizar_grafico(self, datos, titulo, color="#ffb3ba"):
+        self.ax.clear()
+        if datos:
+            # Mostramos solo los primeros 20 para no saturar si el archivo es gigante
+            vis_datos = datos[:20]
+            bars = self.ax.bar(range(len(vis_datos)), vis_datos, color=color)
+            self.ax.set_title(f"{titulo} (Muestra)", color="white")
+            self.ax.tick_params(colors='white')
+        self.canvas.draw()
+        self.root.update_idletasks()
+
+    def iniciar_proceso(self):
+        if not self.archivos_seleccionados:
+            messagebox.showwarning("Atención", "Primero selecciona algunos archivos.")
+            return
+        if not self.running:
+            self.running = True
+            threading.Thread(target=self.proceso_mezcla, daemon=True).start()
+
+    def proceso_mezcla(self):
+        try:
+            self.datos_totales = []
+            
+            # 1. LEER ARCHIVOS
+            for ruta in self.archivos_seleccionados:
+                self.log(f"Leyendo: {os.path.basename(ruta)}...")
+                with open(ruta, 'r') as f:
+                    for linea in f:
+                        if linea.strip():
+                            self.datos_totales.append(int(linea.strip()))
+                self.actualizar_grafico(self.datos_totales, "Cargando datos...")
+                time.sleep(0.5)
+
+            # 2. ORDENAR (Simulando Mezcla Externa Equilibrada)
+            self.log("Iniciando Ordenamiento de los datos unidos...")
+            # Usamos Timsort (interno de Python) que es una mezcla equilibrada optimizada
+            self.datos_totales.sort()
+            self.actualizar_grafico(self.datos_totales, "Datos Ordenados", color="#baffc9")
+            time.sleep(1)
+
+            # 3. GUARDAR RESULTADO
+            nombre_salida = "resultado_ordenado.txt"
+            with open(nombre_salida, 'w') as f:
+                for d in self.datos_totales:
+                    f.write(f"{d}\n")
+            
+            self.log("--- FINALIZADO ---")
+            self.log(f"Archivo creado: {nombre_salida}")
+            self.log(f"Total registros: {len(self.datos_totales)}")
+            messagebox.showinfo("Éxito", f"Se han juntado y ordenado los archivos en {nombre_salida}")
+
+        except Exception as e:
+            self.log(f"ERROR: {str(e)}")
+        finally:
+            self.running = False
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = MezcladorArchivosExternos(root)
+    root.mainloop()
